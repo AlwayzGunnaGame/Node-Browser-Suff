@@ -139,7 +139,7 @@ socket.on("player-2-choice", choiceNum => {
     console.log('user disconnected');
   });
   socket.on('chat message', (msg) => {
-    io.to(room).emit('chat message', msg);
+    io.emit('chat message', msg);
   });
 });
 

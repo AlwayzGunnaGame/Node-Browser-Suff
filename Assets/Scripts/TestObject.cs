@@ -37,7 +37,7 @@ public class TestObject : MonoBehaviour
     void Start()
     {
         Debug.Log("start");
-        socket = IO.Socket("http://localhost:3000");
+        socket = IO.Socket("ws://mobile-party-time.herokuapp.com:80/socket.io/?EIO=4");
 
         socket.On(QSocket.EVENT_CONNECT, () => {
             Debug.Log("Connected");
@@ -81,6 +81,10 @@ public class TestObject : MonoBehaviour
             if(playerName == "Player 2")
             {
                 startRandom = true;
+            }
+            else
+            {
+
             }
         });
 
