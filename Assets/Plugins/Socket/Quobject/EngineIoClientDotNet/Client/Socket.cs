@@ -8,6 +8,7 @@ using Socket.Quobject.EngineIoClientDotNet.ComponentEmitter;
 using Socket.Quobject.EngineIoClientDotNet.Modules;
 using Socket.Quobject.EngineIoClientDotNet.Parser;
 using Socket.Quobject.EngineIoClientDotNet.Thread;
+using UnityEngine;
 
 
 namespace Socket.Quobject.EngineIoClientDotNet.Client {
@@ -130,6 +131,7 @@ namespace Socket.Quobject.EngineIoClientDotNet.Client {
     private Transport CreateTransport(string name) {
       Dictionary<string, string> dictionary = new Dictionary<string, string>((IDictionary<string, string>) this.Query);
       dictionary.Add("EIO", Quobject.EngineIoClientDotNet.Parser.Parser2.Protocol.ToString());
+            //UnityEngine.Debug.Log(dictionary["transport"]);
       dictionary.Add("transport", name);
       if (this.Id != null)
         dictionary.Add("sid", this.Id);

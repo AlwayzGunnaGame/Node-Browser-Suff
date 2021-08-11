@@ -37,7 +37,8 @@ public class TestObject : MonoBehaviour
     void Start()
     {
         Debug.Log("start");
-        socket = IO.Socket("ws://mobile-party-time.herokuapp.com:80/socket.io/?EIO=4");
+        socket = IO.Socket("https://mobile-party-time.herokuapp.com");
+        //socket = IO.Socket("ws://localhost:3000");
 
         socket.On(QSocket.EVENT_CONNECT, () => {
             Debug.Log("Connected");

@@ -2,7 +2,12 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server,{
+    //path: "/socket.io",
+    //pingInterval: 10 * 1000,
+    //pingTimeout: 5000,
+    //transports: ["websocket"],
+  });
 let room = 0;
 let player1Rdy = 0;
 let player2Rdy = 0;
@@ -145,4 +150,5 @@ socket.on("player-2-choice", choiceNum => {
 
 server.listen(process.env.PORT || 3000, () => {
   console.log('listening on *:80');
+  console.log(process.env.PORT);
 });
