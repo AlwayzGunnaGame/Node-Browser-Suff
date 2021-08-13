@@ -62,8 +62,8 @@ public class TestObject : MonoBehaviour
         randomWordList = mytxtData.text.Split(stringSeparators, StringSplitOptions.None).ToList();
 
         Debug.Log("start");
-        socket = IO.Socket("https://mobile-party-time.herokuapp.com");
-        //socket = IO.Socket("ws://localhost:3000");
+        //socket = IO.Socket("https://mobile-party-time.herokuapp.com");
+        socket = IO.Socket("ws://localhost:3000");
 
         socket.On(QSocket.EVENT_CONNECT, () => {
             Debug.Log("Connected");
