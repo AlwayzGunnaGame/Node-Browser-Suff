@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
+app.use(express.static(__dirname));
 const http = require('http');
 const server = http.createServer(app);
-const rooms = {};
 const io = require('socket.io')(server,{
     //path: "/socket.io",
     //pingInterval: 10 * 1000,

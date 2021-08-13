@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
+using System.Linq;
 
 public class TestObject : MonoBehaviour
 {
@@ -48,14 +49,18 @@ public class TestObject : MonoBehaviour
 
     void Start()
     {
-        using (stream = new StreamReader("EveryWord.txt"))
-        {
-            string line;
-            while((line = stream.ReadLine()) != null)
-            {
-                randomWordList.Add(line);
-            }
-        }
+        //using (stream = new StreamReader("EveryWord.txt"))
+        //{
+        //    string line;
+        //    while((line = stream.ReadLine()) != null)
+        //    {
+        //        randomWordList.Add(line);
+        //    }
+        //} //string txt = mytxtData.text;
+        TextAsset mytxtData = (TextAsset)Resources.Load("EveryWord");
+        string[] stringSeparators = new string[] { "\r\n" };
+        randomWordList = mytxtData.text.Split(stringSeparators, StringSplitOptions.None).ToList();
+
         Debug.Log("start");
         socket = IO.Socket("https://mobile-party-time.herokuapp.com");
         //socket = IO.Socket("ws://localhost:3000");
