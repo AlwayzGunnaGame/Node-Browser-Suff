@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
+const rooms = {};
 const io = require('socket.io')(server,{
     //path: "/socket.io",
     //pingInterval: 10 * 1000,
@@ -30,6 +31,7 @@ io.on('connection', (socket) => {
     }else{
 	userConnected(socket.client.id);
 	createRoom(roomId, socket.client.id);
+	socket.roomId = roomId;
 	socket.emit("room-created", roomId);
 	numberOfPlayers++;
 	socket.emit("player-connected", numberOfPlayers);

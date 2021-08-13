@@ -88,7 +88,7 @@ public class TestObject : MonoBehaviour
             playerName = "Player " + data;
             Debug.Log("I am Player " + data);
         });
-
+        
         socket.On("player-1-start", () =>
         {
             if(playerName == "Player 1")
