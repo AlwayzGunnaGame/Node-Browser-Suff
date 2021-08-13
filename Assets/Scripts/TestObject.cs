@@ -1,9 +1,16 @@
 ﻿using Socket.Quobject.SocketIoClientDotNet.Client;
 using UnityEngine;
 using UnityEngine.UI;
+using MoreMountains.Feedbacks;
+using System;
+using System.IO;
+using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 public class TestObject : MonoBehaviour
 {
+    public List<string> randomWordList;
+    private StreamReader stream;
     private QSocket socket;
     public InputField field;
     public InputField chatTextField;
@@ -30,12 +37,25 @@ public class TestObject : MonoBehaviour
     private bool startRandom;
     private bool lostAlready;
     private bool timeRunning;
-    public string[] randomWords;
+    private bool startBonus;
+    //public string[] randomWords;
     public GameObject readyButton;
     public GameObject gameChoices;
+    public MMFeedback feedback;
+    public GameObject winScreen;
+    public GameObject loseScreen;
+    
 
     void Start()
     {
+        using (stream = new StreamReader("EveryWord.txt"))
+        {
+            string line;
+            while((line = stream.ReadLine()) != null)
+            {
+                randomWordList.Add(line);
+            }
+        }
         Debug.Log("start");
         socket = IO.Socket("https://mobile-party-time.herokuapp.com");
         //socket = IO.Socket("ws://localhost:3000");
@@ -62,11 +82,11 @@ public class TestObject : MonoBehaviour
             Debug.Log("I am Player 1");
         });
         
-        socket.On("player-2-connected", () =>
+        socket.On("player-connected", data =>
         {
             if(playerName == "")
-            playerName = "Player 2";
-            Debug.Log("I am Player 2");
+            playerName = "Player " + data;
+            Debug.Log("I am Player " + data);
         });
 
         socket.On("player-1-start", () =>
@@ -74,6 +94,10 @@ public class TestObject : MonoBehaviour
             if(playerName == "Player 1")
             {
                 startRandom = true;
+            }
+            else
+            {
+                startBonus = true;
             }
         });
 
@@ -85,7 +109,7 @@ public class TestObject : MonoBehaviour
             }
             else
             {
-
+                startBonus = true;
             }
         });
 
@@ -181,6 +205,10 @@ public class TestObject : MonoBehaviour
         {
             RandomizeWord();
         }
+        if (startBonus)
+        {
+            RandomizeBonus();
+        }
     }
 
     private void OnDestroy()
@@ -192,10 +220,6 @@ public class TestObject : MonoBehaviour
     {
         if (chatTextField.text.Length > 0)
         {
-            if(chatTextField.text == resultBox.text)
-            {
-                resultBox.text = "Correct!";
-            }
             socket.Emit("chat message", (playerName + ": " + chatTextField.text));
         }
     }
@@ -229,6 +253,12 @@ public class TestObject : MonoBehaviour
         allReady = false;
         readyButton.SetActive(false);
         gameChoices.SetActive(true);
+        winScreen.SetActive(false);
+        loseScreen.SetActive(false);
+        countdownNum = 10;
+        countdown.text = countdownNum.ToString();
+        myScore = 0;
+        scoreText.text = ("Score:\n" + myScore);
     }
 
     public void ReadyUp()
@@ -266,14 +296,31 @@ public class TestObject : MonoBehaviour
         {
             if(wordGuess.text == randomWord.text)
             {
-                wordGuess.text = "";
-                randomWord.text = "";
-                timeRunning = false;
-                myScore++;
-                scoreText.text = ("Score:\n" + myScore);
-                socket.Emit("correct-answer", playerName);
+                if (timeRunning)
+                {
+                    wordGuess.text = "";
+                    randomWord.text = "";
+                    timeRunning = false;
+                    myScore++;
+                    scoreText.text = ("Score:\n" + myScore);
+                    socket.Emit("correct-answer", playerName);
+                }
+                else
+                {
+                    countdownNum++;
+                    countdown.text = countdownNum.ToString();
+                    RandomizeBonus();
+                    wordGuess.text = "";
+                }
             }
         }
+    }
+
+    private void WrongAnswer()
+    {
+        resultBox.color = Color.red;
+        resultBox.text = "Try Again";
+        feedback.Play(feedback.transform.position);
     }
 
     private void Player1Win()
@@ -281,30 +328,55 @@ public class TestObject : MonoBehaviour
         player1Win = false;
         if (playerName == "Player 1")
         {
-            resultBox.text = "You Win!";
+            //resultBox.color = Color.green;
+            //resultBox.text = "You Win!";
+            winScreen.SetActive(true);
         }
         else
         {
-            resultBox.text = "You Lose.";
+            //resultBox.color = Color.red;
+            //resultBox.text = "You Lose.";
+            loseScreen.SetActive(true);
         }
+        randomWord.text = "";
+        gameChoices.SetActive(false);
+        resultBox.text = "";
+        readyButton.SetActive(true);
     }
     private void Player2Win()
     {
         player2Win = false;
         if (playerName == "Player 2")
         {
-            resultBox.text = "You Win!";
+            //resultBox.color = Color.green;
+            //resultBox.text = "You Win!";
+            winScreen.SetActive(true);
         }
         else
         {
-            resultBox.text = "You Lose.";
+            //resultBox.color = Color.red;
+            //resultBox.text = "You Lose.";
+            loseScreen.SetActive(true);
         }
+        randomWord.text = "";
+        gameChoices.SetActive(false);
+        resultBox.text = "";
+        readyButton.SetActive(true);
     }
 
     private void RandomizeWord()
     {
         startRandom = false;
-        randomWord.text = randomWords[Random.Range(0, randomWords.Length)];
+        randomWord.color = Color.black;
+        randomWord.text = randomWordList[Random.Range(0, randomWordList.Count)];
         timeRunning = true;
+        wordGuess.text = "";
+    }
+
+    private void RandomizeBonus()
+    {
+        startBonus = false;
+        randomWord.color = Color.green;
+        randomWord.text = randomWordList[Random.Range(0, randomWordList.Count)];
     }
 }

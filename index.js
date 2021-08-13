@@ -11,6 +11,7 @@ const io = require('socket.io')(server,{
 let room = 0;
 let player1Rdy = 0;
 let player2Rdy = 0;
+let numberOfPlayers = 0;
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
@@ -30,7 +31,8 @@ io.on('connection', (socket) => {
 	userConnected(socket.client.id);
 	createRoom(roomId, socket.client.id);
 	socket.emit("room-created", roomId);
-	socket.emit("player-1-connected");
+	numberOfPlayers++;
+	socket.emit("player-connected", numberOfPlayers);
 	socket.join(roomId);
 	room = roomId;
 	console.log('room created ', roomId);
@@ -46,7 +48,8 @@ io.on('connection', (socket) => {
 	userConnected(socket.client.id);
 	joinRoom(roomId, socket.client.id);
 	socket.emit("room-joined", roomId);
-	socket.emit("player-2-connected");
+	numberOfPlayers++;
+	socket.emit("player-connected", numberOfPlayers);
 	socket.join(roomId);
 	room = roomId;
      }
@@ -144,7 +147,11 @@ socket.on("player-2-choice", choiceNum => {
     console.log('user disconnected');
   });
   socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
+    if(room == 0){
+      io.emit('chat message', msg);
+    }else{
+      io.to(room).emit('chat message', msg);
+    }
   });
 });
 
