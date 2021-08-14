@@ -11,8 +11,7 @@ using System.Linq;
 public class TestObject : MonoBehaviour
 {
     public List<string> randomWordList;
-    private StreamReader stream;
-    private QSocket socket;
+    private WebGLSocketIOInterface socket;
     public InputField field;
     public InputField chatTextField;
     public InputField wordGuess;
@@ -49,21 +48,12 @@ public class TestObject : MonoBehaviour
 
     void Start()
     {
-        //using (stream = new StreamReader("EveryWord.txt"))
-        //{
-        //    string line;
-        //    while((line = stream.ReadLine()) != null)
-        //    {
-        //        randomWordList.Add(line);
-        //    }
-        //} //string txt = mytxtData.text;
         TextAsset mytxtData = (TextAsset)Resources.Load("EveryWord");
         string[] stringSeparators = new string[] { "\r\n" };
         randomWordList = mytxtData.text.Split(stringSeparators, StringSplitOptions.None).ToList();
 
         Debug.Log("start");
-        socket = IO.Socket("https://mobile-party-time.herokuapp.com");
-        //socket = IO.Socket("ws://localhost:3000");
+        socket = WebGLSocketIOInterface.instance;
 
         socket.On(QSocket.EVENT_CONNECT, () => {
             Debug.Log("Connected");
@@ -79,12 +69,6 @@ public class TestObject : MonoBehaviour
 
         socket.On("display-error", data => {
             Debug.Log("Error Occurred: " + data);
-        });
-        
-        socket.On("player-1-connected", () =>
-        {
-            playerName = "Player 1";
-            Debug.Log("I am Player 1");
         });
         
         socket.On("player-connected", data =>
