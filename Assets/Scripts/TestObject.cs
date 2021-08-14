@@ -1,7 +1,6 @@
 ﻿using Socket.Quobject.SocketIoClientDotNet.Client;
 using UnityEngine;
 using UnityEngine.UI;
-using MoreMountains.Feedbacks;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -41,7 +40,6 @@ public class TestObject : MonoBehaviour
     //public string[] randomWords;
     public GameObject readyButton;
     public GameObject gameChoices;
-    public MMFeedback feedback;
     public GameObject winScreen;
     public GameObject loseScreen;
     
@@ -316,7 +314,6 @@ public class TestObject : MonoBehaviour
     {
         resultBox.color = Color.red;
         resultBox.text = "Try Again";
-        feedback.Play(feedback.transform.position);
     }
 
     private void Player1Win()
