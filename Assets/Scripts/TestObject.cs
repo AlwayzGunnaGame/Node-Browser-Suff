@@ -71,13 +71,20 @@ public class TestObject : MonoBehaviour
             Debug.Log("Error Occurred: " + data);
         });
         
-        socket.On("player-connected", data =>
+        socket.On("player-1-connected", () =>
         {
             if(playerName == "")
-            playerName = "Player " + data;
-            Debug.Log("I am Player " + data);
+            playerName = "Player 1";
+            Debug.Log("I am Player 1");
         });
-        
+
+        socket.On("player-2-connected", () =>
+        {
+            if (playerName == "")
+                playerName = "Player 2";
+            Debug.Log("I am Player 2");
+        });
+
         socket.On("player-1-start", () =>
         {
             if(playerName == "Player 1")

@@ -12,7 +12,6 @@ const io = require('socket.io')(server,{
 let room = 0;
 let player1Rdy = 0;
 let player2Rdy = 0;
-let numberOfPlayers = 0;
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
@@ -33,8 +32,7 @@ io.on('connection', (socket) => {
 	createRoom(roomId, socket.client.id);
 	socket.roomId = roomId;
 	socket.emit("d", {t:"room-created", d:roomId});
-	numberOfPlayers++;
-	socket.emit("d", {t:"player-connected", d:numberOfPlayers});
+	socket.emit("d", {t:"player-1-connected"});
 	socket.join(roomId);
 	room = roomId;
 	console.log('room created ', roomId);
@@ -50,8 +48,7 @@ io.on('connection', (socket) => {
 	userConnected(socket.client.id);
 	joinRoom(roomId, socket.client.id);
 	socket.emit("d", {t:"room-joined", d:roomId});
-	numberOfPlayers++;
-	socket.emit("d", {t:"player-connected", d:numberOfPlayers});
+	socket.emit("d", {t:"player-2-connected"});
 	socket.join(roomId);
 	room = roomId;
      }
