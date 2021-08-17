@@ -39,6 +39,11 @@ io.on('connection', (socket) => {
     }
   })
 
+  socket.on("set-name", nickname => {
+    socket.username = nickname;
+    console.log('Welcome ', socket.username);
+  })
+
   socket.on("join-room", roomId => {
      console.log('Joining room ', roomId);
      if(!rooms[roomId]){

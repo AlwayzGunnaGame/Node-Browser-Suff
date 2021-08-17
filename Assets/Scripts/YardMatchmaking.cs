@@ -7,11 +7,11 @@ using System.Collections.Generic;
 using Random = UnityEngine.Random;
 using System.Linq;
 
-public class TestObject : MonoBehaviour
+public class YardMatchmaking : MonoBehaviour
 {
     public List<string> randomWordList;
     private WebGLSocketIOInterface socket;
-    public InputField field;
+    public InputField usernameField;
     public InputField chatTextField;
     public InputField wordGuess;
     public Text randomWord;
@@ -38,10 +38,11 @@ public class TestObject : MonoBehaviour
     private bool timeRunning;
     private bool startBonus;
     //public string[] randomWords;
-    public GameObject readyButton;
-    public GameObject gameChoices;
+    public GameObject loginScreen;
+    public GameObject mainLobbyScreen;
     public GameObject winScreen;
     public GameObject loseScreen;
+    private string nickname;
     
 
     void Start()
@@ -57,12 +58,12 @@ public class TestObject : MonoBehaviour
             Debug.Log("Connected");
             //socket.Emit("chat message", "test");
         });
-
+        
         socket.On("chat message", data => {
             Debug.Log(data);
             //chatBox.text = chatBox.text + "\n" + data;
             displayMessage = true;
-            chatToPost = data.ToString();
+            chatToPost = nickname + ": " + data.ToString();
         });
 
         socket.On("display-error", data => {
@@ -220,12 +221,12 @@ public class TestObject : MonoBehaviour
 
     public void CreateRoom()
     {
-        socket.Emit("create-room", field.text);
+        //socket.Emit("create-room", field.text);
     }
 
     public void JoinRoom()
     {
-        socket.Emit("join-room", field.text);
+        //socket.Emit("join-room", field.text);
     }
 
     private void ChangeUI()
@@ -245,8 +246,8 @@ public class TestObject : MonoBehaviour
     private void AllReady()
     {
         allReady = false;
-        readyButton.SetActive(false);
-        gameChoices.SetActive(true);
+        //readyButton.SetActive(false);
+        //gameChoices.SetActive(true);
         winScreen.SetActive(false);
         loseScreen.SetActive(false);
         countdownNum = 10;
@@ -332,9 +333,9 @@ public class TestObject : MonoBehaviour
             loseScreen.SetActive(true);
         }
         randomWord.text = "";
-        gameChoices.SetActive(false);
+        //gameChoices.SetActive(false);
         resultBox.text = "";
-        readyButton.SetActive(true);
+        //readyButton.SetActive(true);
     }
     private void Player2Win()
     {
@@ -352,9 +353,9 @@ public class TestObject : MonoBehaviour
             loseScreen.SetActive(true);
         }
         randomWord.text = "";
-        gameChoices.SetActive(false);
+        //gameChoices.SetActive(false);
         resultBox.text = "";
-        readyButton.SetActive(true);
+        //readyButton.SetActive(true);
     }
 
     private void RandomizeWord()
@@ -371,5 +372,16 @@ public class TestObject : MonoBehaviour
         startBonus = false;
         randomWord.color = Color.green;
         randomWord.text = randomWordList[Random.Range(0, randomWordList.Count)];
+    }
+
+    public void SetNickname()
+    {
+        if (usernameField.text.Length > 0)
+        {
+            nickname = usernameField.text;
+            loginScreen.SetActive(false);
+            mainLobbyScreen.SetActive(true);
+            socket.Emit("set-name", nickname);
+        }
     }
 }
