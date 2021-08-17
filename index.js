@@ -9,6 +9,7 @@ const io = require('socket.io')(server,{
     //pingTimeout: 5000,
     //transports: ["websocket"],
   });
+var clients = [];
 let room = 0;
 let player1Rdy = 0;
 let player2Rdy = 0;
@@ -41,7 +42,9 @@ io.on('connection', (socket) => {
 
   socket.on("set-name", nickname => {
     socket.username = nickname;
+    clients.push(nickname);
     console.log('Welcome ', socket.username);
+    console.log('There are now ', clients.length, ' players online!');
   })
 
   socket.on("join-room", roomId => {
