@@ -148,7 +148,7 @@ socket.on("player-2-choice", choiceNum => {
   })
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log(socket.username, ' disconnected');
   });
   socket.on('chat message', (msg) => {
     if(room == 0){
