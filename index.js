@@ -151,6 +151,8 @@ socket.on("player-2-choice", choiceNum => {
   })
 
   socket.on('disconnect', () => {
+    let pos = clients.indexOf(socket.username);
+    clients.splice(pos);
     console.log(socket.username, ' disconnected');
   });
   socket.on('chat message', (msg) => {
