@@ -149,6 +149,11 @@ socket.on("player-2-choice", choiceNum => {
 	io.to(room).emit("d", {t:'chat message', d:"Waiting on Player 1"});
     }  
   })
+  
+  socket.on('invite-player', invitedPlayer => {
+    console.log(socket.nickname, " invited ", invitedPlayer);
+    socket.broadcast.to(invitedPlayer).emit("d", {t:'get-invited', d:"You were invited"});
+  })
 
   socket.on('disconnect', () => {
     let pos = clients.indexOf(socket.username);

@@ -13,7 +13,7 @@ public class YardMatchmaking : MonoBehaviour
     private WebGLSocketIOInterface socket;
     public InputField usernameField;
     public InputField chatTextField;
-    public InputField wordGuess;
+    public InputField inviteField;
     public Text randomWord;
     public Text chatBox;
     public Text roomNumber;
@@ -42,6 +42,8 @@ public class YardMatchmaking : MonoBehaviour
     public GameObject mainLobbyScreen;
     public GameObject winScreen;
     public GameObject loseScreen;
+    public bool isLeader;
+    public string[] partyMembers;
     private string nickname;
     
 
@@ -151,7 +153,10 @@ public class YardMatchmaking : MonoBehaviour
             resultBox.text = "It Was A Tie.";
         });
 
-
+        socket.On("get-invited", data =>
+        {
+            Debug.Log("data");
+        });
 
         socket.On("room-joined", data =>
         {
@@ -285,31 +290,7 @@ public class YardMatchmaking : MonoBehaviour
         chatTextField.text = "";
     }
 
-    public void GuessWord()
-    {
-        if(wordGuess.text.Length > 0)
-        {
-            if(wordGuess.text == randomWord.text)
-            {
-                if (timeRunning)
-                {
-                    wordGuess.text = "";
-                    randomWord.text = "";
-                    timeRunning = false;
-                    myScore++;
-                    scoreText.text = ("Score:\n" + myScore);
-                    socket.Emit("correct-answer", playerName);
-                }
-                else
-                {
-                    countdownNum++;
-                    countdown.text = countdownNum.ToString();
-                    RandomizeBonus();
-                    wordGuess.text = "";
-                }
-            }
-        }
-    }
+    
 
     private void WrongAnswer()
     {
@@ -364,7 +345,7 @@ public class YardMatchmaking : MonoBehaviour
         randomWord.color = Color.black;
         randomWord.text = randomWordList[Random.Range(0, randomWordList.Count)];
         timeRunning = true;
-        wordGuess.text = "";
+        //wordGuess.text = "";
     }
 
     private void RandomizeBonus()
@@ -382,6 +363,15 @@ public class YardMatchmaking : MonoBehaviour
             loginScreen.SetActive(false);
             mainLobbyScreen.SetActive(true);
             socket.Emit("set-name", nickname);
+        }
+    }
+
+    public void SendInvite()
+    {
+        if(inviteField.text.Length > 0)
+        {
+            socket.Emit("invite-player", inviteField.text);
+            inviteField.text = "";
         }
     }
 }
