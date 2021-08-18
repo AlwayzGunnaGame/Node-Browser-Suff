@@ -979,6 +979,7 @@ GameObject:
   - component: {fileID: 110158157}
   - component: {fileID: 110158156}
   - component: {fileID: 110158159}
+  - component: {fileID: 110158160}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1064,9 +1065,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   randomWordList: []
-  field: {fileID: 0}
+  usernameField: {fileID: 1411352890}
   chatTextField: {fileID: 0}
-  wordGuess: {fileID: 0}
+  inviteField: {fileID: 0}
   randomWord: {fileID: 0}
   chatBox: {fileID: 0}
   roomNumber: {fileID: 0}
@@ -1076,10 +1077,24 @@ MonoBehaviour:
   countdownNum: 10
   joinLobbyMenu: {fileID: 0}
   roomMenu: {fileID: 0}
-  readyButton: {fileID: 0}
-  gameChoices: {fileID: 0}
+  loginScreen: {fileID: 1678218735}
+  mainLobbyScreen: {fileID: 1554888750}
   winScreen: {fileID: 0}
   loseScreen: {fileID: 0}
+  isLeader: 0
+  partyMembers: []
+--- !u!114 &110158160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110158155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 823577d24c6c13043aef1db07d918dce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &112967087
 GameObject:
   m_ObjectHideFlags: 0
@@ -2544,7 +2559,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 607272615}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 110158159}
+        m_TargetAssemblyTypeName: YardMatchmaking, Assembly-CSharp
+        m_MethodName: SetNickname
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &607272615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2678,7 +2705,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: The Yard Matchmaking
+  m_text: King of the Field
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5137,7 +5164,7 @@ GameObject:
   - component: {fileID: 1411352891}
   - component: {fileID: 1411352890}
   m_Layer: 5
-  m_Name: InputField
+  m_Name: UsernameField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5860,7 +5887,7 @@ GameObject:
   - component: {fileID: 1683317952}
   - component: {fileID: 1683317951}
   m_Layer: 5
-  m_Name: InputField (1)
+  m_Name: PasswordField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

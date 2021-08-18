@@ -155,7 +155,7 @@ public class YardMatchmaking : MonoBehaviour
 
         socket.On("get-invited", data =>
         {
-            Debug.Log("data");
+            Debug.Log(data);
         });
 
         socket.On("room-joined", data =>
